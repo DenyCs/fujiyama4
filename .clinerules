@@ -1,0 +1,18 @@
+# .clinerules — Fujiyama Ramen Project
+
+1. Proyek ini Laravel modular menggunakan package nwidart/laravel-modules.
+2. Selalu kerjakan HANYA modul yang diminta di prompt saat ini. Jangan menyentuh modul lain.
+3. Jangan membaca folder vendor/, node_modules/, storage/framework/ kecuali diminta eksplisit.
+4. Setelah menyelesaikan satu fase, update file PROGRESS.md dengan checklist yang sudah selesai.
+5. Gunakan Tailwind CSS untuk sisi client dan AdminLTE v4 (CDN) untuk sisi admin.
+6. Konvensi penamaan: gunakan Bahasa Inggris untuk nama file/variabel/kolom database,
+   Bahasa Indonesia boleh untuk teks/label di UI.
+7. Jangan install package tambahan tanpa menyebutkan alasannya dulu di chat.
+8. Environment development menggunakan Windows dengan PowerShell (bukan bash/Unix shell).
+   Jangan gunakan perintah Unix seperti tail, cat, grep, ls — gunakan perintah
+   PowerShell yang setara (Get-Content, Select-String, Get-ChildItem, dst).
+9. Saat memberikan perintah terminal untuk diuji manual oleh user, tuliskan
+   command PowerShell di dalam code block dengan syntax PowerShell yang valid
+   dan LENGKAP (jangan menghilangkan tanda $ pada variabel). Jangan mengasumsikan
+   command akan dieksekusi otomatis lewat shell lain (bash/sh) — user menjalankan
+   semua command secara manual di terminal PowerShell VS Code.

@@ -1,0 +1,10 @@
+{
+    "Core": true,
+    "Menu": true,
+    "Admin": true,
+    "Client": true,
+    "Cart": true,
+    "Order": true,
+    "Reservation": true,
+    "Event": true
+}

@@ -1,0 +1,29 @@
+<?php
+
+namespace Modules\Order\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Menu\Models\Menu;
+
+class OrderItem extends Model
+{
+    protected $fillable = [
+        'order_id',
+        'menu_id',
+        'menu_name',
+        'price',
+        'qty',
+        'subtotal',
+    ];
+
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class);
+    }
+
+    public function menu(): BelongsTo
+    {
+        return $this->belongsTo(Menu::class);
+    }
+}
