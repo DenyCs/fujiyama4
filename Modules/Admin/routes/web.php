@@ -7,6 +7,7 @@ use Modules\Admin\Http\Controllers\MenuController;
 use Modules\Admin\Http\Controllers\OrderController;
 use Modules\Admin\Http\Controllers\ReservationController;
 use Modules\Admin\Http\Controllers\EventController;
+use Modules\Admin\Http\Controllers\BannerController;
 use Modules\Admin\Http\Middleware\AdminMiddleware;
 
 Route::middleware(['web', 'auth', AdminMiddleware::class])->prefix('admin')->name('admin.')->group(function () {
@@ -25,6 +26,9 @@ Route::middleware(['web', 'auth', AdminMiddleware::class])->prefix('admin')->nam
 
     // Event CRUD
     Route::resource('events', EventController::class)->except(['show']);
+
+    // Banner CRUD
+    Route::resource('banners', BannerController::class)->except(['show']);
 
     // Reservasi
     Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');

@@ -6,5 +6,6 @@
     "Cart": true,
     "Order": true,
     "Reservation": true,
-    "Event": true
+    "Event": true,
+    "Banner": true
 }

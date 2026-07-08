@@ -340,3 +340,86 @@ Semua fitur tahap awal telah diimplementasikan:
 - [x] `npm run build` — sukses
 
 **Status: Production Ready ✅**
+
+---
+
+## 🌗 Dark Mode Toggle (Client Side) ✅
+
+- [x] Enable `darkMode: 'class'` di `tailwind.config.js`
+- [x] Anti-flash protection script di `<head>` (`guest.blade.php`) — cek localStorage + System preference, set `class="dark"` sebelum render
+- [x] Dark mode toggle button (matahari/bulan) di desktop navbar kanan atas dan mobile bottom navbar (sebelum cart)
+- [x] Icon cycler: `sun.svg` + `moon.svg` di `Modules/Client/resources/assets/icons/`
+- [x] LocalStorage persistence: `localStorage.setItem('theme', isDark ? 'dark' : 'light')`
+- [x] **Dual-mode colors** diterapkan di seluruh content area:
+  - [x] `guest.blade.php` — navbar (bg + text + border), footer, bottom navbar
+  - [x] `home.blade.php` — hero, featured menu, categories, promo, events
+  - [x] `menu.blade.php` — header, card menu, category tabs, search
+  - [x] `cart/index.blade.php` — cart items, qty controls, total
+  - [x] `checkout.blade.php` — form inputs, cart summary
+  - [x] `success.blade.php` — success icon, order details card
+  - [x] `reservation/create.blade.php` — form, pre-order card
+  - [x] `events.blade.php` — header, cards, status badge
+- [x] `npm run build` — sukses (80KB CSS + 46KB JS)
+
+---
+
+## 🌗 Bottom Navbar Mobile Dark Mode Fix ✅
+
+- [x] Menghapus `<style>` block `.bn-pill`, `.bn-center-ring`, `.bn-center-glow` (warna hardcode)
+- [x] Container pill: `bg-white/80 dark:bg-neutral-900/70 backdrop-blur-md border-neutral-200/40 dark:border-white/[0.06]`
+- [x] Icon + label non-aktif: `text-neutral-500 dark:text-neutral-400`
+- [x] Center button ring: `border-[6px] border-white dark:border-neutral-950` — mengikuti background halaman
+- [x] Center button glow: `shadow-lg shadow-orange-500/50` (orange tetap di kedua mode)
+- [x] Cart badge: orange tetap (`bg-orange-500`, `bg-orange-600`)
+- [x] Mobile toggle button sudah dual-mode: `bg-white/40 dark:bg-neutral-800/60 border-neutral-200 dark:border-neutral-700`
+- [x] `npm run build` sukses (78KB CSS + 46KB JS)
+
+---
+
+## 🏷️ Label "Menu" di Bawah Floating Button (Bottom Navbar) ✅
+
+- [x] Tambah teks label "Menu" di bawah lingkaran oranye floating button — `text-[10px] font-semibold text-orange-500`
+- [x] `mt-6` (24px) untuk mendorong teks melewati bagian bawah lingkaran (58px circle, -36px translate → ~22px ke bawah → butuh ~24px gap untuk clear)
+- [x] Teks sejajar horizontal dengan label lain (Beranda, Event, Reservasi, Cart) di dalam pill
+- [x] Tidak ada overlap: `mt-6` cukup untuk memastikan teks tidak tertutup oleh lingkaran oranye
+- [x] Warna oranye konsisten di kedua mode (static orange)
+- [x] `npm run build` — sukses (77KB CSS + 46KB JS)
+
+---
+
+## Hero Slider with Banners (Admin-Manageable) ✅
+
+- [x] **php artisan module:make Banner** — buat modul Banner
+- [x] **Migration `banners`**: id, title, subtitle (nullable), description (nullable), cta_text (nullable), cta_link (nullable), image (nullable), order (default 0), is_active (default true), timestamps
+- [x] **Model Banner**: `$fillable`, `scopeActive()`, `getImageUrlAttribute()`, `getIsActiveLabelAttribute()`, `getStatusBadgeAttribute()`
+- [x] **Seeder (3 banners)**: Authentic Japanese Ramen, New Summer Special, Special Combo Deal
+- [x] **Admin - BannerController**: CRUD index/create/edit/delete banners
+- [x] **Admin - Views**: banners/index.blade.php, create.blade.php, edit.blade.php (AdminLTE table + card layout)
+- [x] **Admin - Routes**: `/admin/banners` resource di `Modules/Admin/routes/web.php`
+- [x] **Admin - Sidebar**: menu "Hero Banners"
+- [x] **Client - Hero slider**: home.blade.php menampilkan banner sebagai full-screen slider (Alpine.js carousel dengan autoplay, navigation arrows, pagination dots, gradient overlays)
+- [x] **Client - Fallback**: jika tidak ada banner, tampilkan hero statis (gradient background, heading, CTA buttons, preview menu cards)
+- [x] **Alpine.js heroSlider component**: di guest.blade.php — autoplay 5 detik, prev/next/goTo, reset autoplay on manual interaction
+- [x] **Migration dijalankan & seed** — sukses
+- [x] **`npm run build`** — sukses (79KB CSS + 46KB JS)
+
+---
+
+## 🐛 Fix: Halaman Reservasi Dark Mode Statis ✅
+
+**Root cause:** Ada dua file view reservasi — `create.blade.php` (dengan warna dark mode statis) dan `create.blade` (dengan dual-mode). Laravel memuat `.blade.php`, sehingga dual-mode di file `.blade` tidak pernah terpakai.
+
+**Solusi:**
+- [x] Overwrite `create.blade.php` dengan konten dual-mode dari `create.blade`
+- [x] Hapus file orphan `create.blade` (tanpa ekstensi) untuk menghindari kebingungan
+- [x] Semua elemen kini punya `dark:` variant:
+  - Background: `bg-white dark:bg-neutral-950/900`
+  - Teks: `text-neutral-900 dark:text-white`, `text-neutral-700 dark:text-neutral-300`
+  - Border: `border-neutral-200 dark:border-neutral-800`, `border-neutral-300 dark:border-neutral-700`
+  - Form input: `bg-neutral-100 dark:bg-neutral-800`, placeholder `placeholder-neutral-400 dark:placeholder-neutral-500`
+  - Error box: `bg-red-50 dark:bg-red-900/30`, `text-red-700 dark:text-red-300`
+  - Info box: `bg-orange-50 dark:bg-orange-900/20`, `text-orange-700 dark:text-orange-300`
+  - Cart summary items: `bg-neutral-100 dark:bg-neutral-800`, `text-neutral-900 dark:text-white`
+  - Cart total: `text-orange-600 dark:text-orange-400`
+  - Empty cart: `text-neutral-500 dark:text-neutral-400`
+- [x] `npm run build` — sukses (77KB CSS + 46KB JS)

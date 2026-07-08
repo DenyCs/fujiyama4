@@ -3,6 +3,7 @@
 namespace Modules\Client\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Modules\Banner\Models\Banner;
 use Modules\Event\Models\Event;
 use Modules\Menu\Models\Category;
 use Modules\Menu\Models\Menu;
@@ -29,7 +30,9 @@ class ClientController extends Controller
 
         $events = Event::active()->latest()->limit(4)->get();
 
-        return view('client::home', compact('categories', 'featuredMenus', 'heroMenus', 'events'));
+        $banners = Banner::active()->orderBy('order')->get();
+
+        return view('client::home', compact('categories', 'featuredMenus', 'heroMenus', 'events', 'banners'));
     }
 
     /**
