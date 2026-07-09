@@ -7,5 +7,9 @@
     "Order": true,
     "Reservation": true,
     "Event": true,
-    "Banner": true
+    "Banner": true,
+    "About": true,
+    "Testimonial": true,
+    "Setting": true,
+    "Faq": true
 }

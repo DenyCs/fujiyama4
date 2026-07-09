@@ -46,10 +46,10 @@
         });
     ">
 
-    <!-- Sticky Navbar -->
+    <!-- Sticky Navbar — Liquid Glass / Glassmorphism -->
     <nav x-data="{ open: false, scrolled: false }" x-init="window.addEventListener('scroll', () => scrolled = window.scrollY > 20)"
-        :class="scrolled ? 'bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md shadow-lg shadow-orange-900/10' : 'bg-transparent'"
-        class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        :class="scrolled ? 'shadow-2xl shadow-black/30' : 'shadow-lg shadow-black/10'"
+        class="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-neutral-950/90 backdrop-blur-2xl [-webkit-backdrop-filter:blur(40px)] border-b border-black/[0.04] dark:border-white/[0.06] border-t border-t-white/10 dark:border-t-white/[0.03] transition-all duration-500">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 lg:h-20">
                 <!-- Logo -->
@@ -122,7 +122,7 @@
     </button>
 
     <!-- Main Content -->
-    <main class="pb-24 lg:pb-0">
+    <main class="pt-16 lg:pt-20 pb-24 lg:pb-0">
         <?php echo $__env->yieldContent('content'); ?>
     </main>
 
@@ -243,6 +243,31 @@
     <script>
         // Hero slider component
         document.addEventListener('alpine:init', () => {
+            // Cart store — shared across all client pages
+            Alpine.store('cart', {
+                count: <?php echo e($cartCount ?? 0); ?>,
+                async addItem(menuId) {
+                    const csrf = document.querySelector('meta[name="csrf-token"]').content;
+                    try {
+                        const res = await fetch('/cart', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrf,
+                                'Accept': 'application/json',
+                            },
+                            body: JSON.stringify({ menu_id: menuId, qty: 1 })
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            this.count = data.count;
+                        }
+                    } catch (e) {
+                        console.error('Failed to add to cart:', e);
+                    }
+                }
+            });
+
             Alpine.data('heroSlider', (count) => ({
                 current: 0,
                 total: count,
@@ -266,11 +291,6 @@
 
                 next() {
                     this.current = (this.current + 1) % this.total;
-                    this.resetAutoplay();
-                },
-
-                prev() {
-                    this.current = (this.current - 1 + this.total) % this.total;
                     this.resetAutoplay();
                 },
 

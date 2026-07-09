@@ -47,7 +47,7 @@
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-4">
                                         <div class="w-14 h-14 rounded-xl bg-orange-600/20 flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
-                                            <img x-show="item.image" :src="'/storage/menus/' + item.image" :alt="item.name" class="w-full h-full object-cover">
+                                            <img x-show="item.image" :src="'/storage/' + item.image" :alt="item.name" class="w-full h-full object-cover">
                                             <span x-show="!item.image">🍜</span>
                                         </div>
                                         <div>

@@ -49,7 +49,7 @@ class Event extends Model
     public function getImageUrlAttribute(): string
     {
         if ($this->image) {
-            return asset('storage/events/' . $this->image);
+            return asset('storage/' . $this->image);
         }
         return asset('images/event-placeholder.jpg');
     }

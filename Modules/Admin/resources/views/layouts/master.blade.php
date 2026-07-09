@@ -97,6 +97,41 @@
                             <p>Reservasi</p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.testimonials.index') }}" class="nav-link {{ request()->routeIs('admin.testimonials.*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-star"></i>
+                            <p>Testimoni</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.faqs.index') }}" class="nav-link {{ request()->routeIs('admin.faqs.*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-question-circle"></i>
+                            <p>FAQ</p>
+                        </a>
+                    </li>
+                    <li class="nav-item {{ request()->routeIs('admin.about.*') || request()->routeIs('admin.settings.*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->routeIs('admin.about.*') || request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-cog"></i>
+                            <p>
+                                Pengaturan
+                                <i class="nav-arrow fas fa-angle-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.about.edit') }}" class="nav-link {{ request()->routeIs('admin.about.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-info-circle"></i>
+                                    <p>Tentang Kami</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.settings.location.edit') }}" class="nav-link {{ request()->routeIs('admin.settings.location.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-map-marker-alt"></i>
+                                    <p>Lokasi & Jam Buka</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </nav>
         </div>

@@ -18,41 +18,45 @@
             <p class="text-neutral-500">Menu akan segera hadir. Silakan cek kembali nanti.</p>
         </div>
         @else
-        <!-- Menu Grid (flat — no category sections) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Menu Grid — 2 cols mobile, 2 cols sm, 3 cols lg -->
+        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8">
             @foreach($menus as $menu)
-            <div class="group bg-white dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden hover:border-orange-600/50 hover:shadow-lg hover:shadow-orange-600/10 transition-all duration-300"
+            <div class="group bg-white dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden hover:border-orange-600/50 hover:shadow-lg hover:shadow-orange-600/10 transition-all duration-300 p-3 sm:pt-6 sm:pb-5 sm:px-5 flex flex-col items-center text-center"
                 x-data="{ added: false }">
-                <!-- Menu Image -->
-                <div class="relative h-48 bg-gradient-to-br from-orange-200 dark:from-orange-900/30 to-neutral-100 dark:to-neutral-900 flex items-center justify-center overflow-hidden">
-                    @if($menu->image)
-                        <img src="{{ asset('storage/menus/' . $menu->image) }}" alt="{{ $menu->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    @else
-                        <div class="text-6xl">🍜</div>
-                    @endif
-                    <!-- Price Badge -->
-                    <div class="absolute top-3 right-3 px-3 py-1.5 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 rounded-lg">
-                        <span class="text-sm font-bold text-orange-600 dark:text-orange-400">Rp {{ number_format($menu->price, 0, ',', '.') }}</span>
+
+                {{-- Image — transparent PNG, no wrapper frame, inside card --}}
+                @if($menu->image)
+                    <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}"
+                        class="w-24 h-24 sm:w-40 sm:h-40 object-contain group-hover:scale-110 transition-all duration-500 mb-1 sm:mb-2 drop-shadow-[0_6px_10px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_10px_20px_rgba(234,88,12,0.25)]">
+                @else
+                    <div class="w-24 h-24 sm:w-40 sm:h-40 flex items-center justify-center text-4xl sm:text-6xl mb-1 sm:mb-2">
+                        🍜
                     </div>
-                </div>
+                @endif
 
-                <!-- Menu Info -->
-                <div class="p-5">
-                    <h3 class="text-lg font-bold text-neutral-900 dark:text-white mb-1">{{ $menu->name }}</h3>
-                    @if($menu->description)
-                        <p class="text-sm text-neutral-500 mb-4 line-clamp-2">{{ $menu->description }}</p>
-                    @endif
+                {{-- Nama Menu --}}
+                <h3 class="text-sm sm:text-lg font-bold text-neutral-900 dark:text-white mb-1 sm:mb-2 mt-1 sm:mt-2">{{ $menu->name }}</h3>
 
-                    <!-- Add to Cart Button -->
-                    <button type="button"
-                        @click="added = true; $store.cart.addItem({{ $menu->id }}); setTimeout(() => added = false, 2000)"
-                        class="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-orange-600/10 dark:bg-orange-600/20 hover:bg-orange-600 dark:hover:bg-orange-600 text-orange-600 dark:text-orange-400 hover:text-white border border-orange-600/30 hover:border-orange-600 rounded-xl transition-all duration-300 text-sm font-semibold">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
-                        </svg>
-                        <span x-text="added ? '✓ Ditambahkan' : 'Tambah ke Keranjang'">Tambah ke Keranjang</span>
-                    </button>
-                </div>
+                {{-- Deskripsi --}}
+                @if($menu->description)
+                    <p class="text-xs sm:text-sm text-neutral-500 mb-2 sm:mb-4 line-clamp-2">{{ $menu->description }}</p>
+                @else
+                    <div class="mb-2 sm:mb-4"></div>
+                @endif
+
+                {{-- Harga --}}
+                <span class="text-base sm:text-xl font-bold text-orange-600 dark:text-orange-400 mb-2 sm:mb-4">Rp {{ number_format($menu->price, 0, ',', '.') }}</span>
+
+                {{-- Tombol Tambah ke Keranjang (pill outline) --}}
+                <button type="button"
+                    @click="added = true; $store.cart.addItem({{ $menu->id }}); setTimeout(() => added = false, 2000)"
+                    class="inline-flex items-center gap-1 sm:gap-2 px-3 py-2 sm:px-5 sm:py-2.5 border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-full transition-all duration-300 text-xs sm:text-sm font-semibold mt-auto">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
+                    </svg>
+                    <span class="hidden sm:inline" x-text="added ? '✓ Ditambahkan' : 'Tambah ke Keranjang'">Tambah ke Keranjang</span>
+                    <span class="sm:hidden" x-text="added ? '✓' : '+ Keranjang'">+ Keranjang</span>
+                </button>
             </div>
             @endforeach
         </div>
