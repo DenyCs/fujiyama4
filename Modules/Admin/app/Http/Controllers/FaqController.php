@@ -3,7 +3,7 @@
 namespace Modules\Admin\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Modules\Admin\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use Modules\Faq\Models\Faq;
 
 class FaqController extends Controller

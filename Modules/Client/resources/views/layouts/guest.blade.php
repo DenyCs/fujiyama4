@@ -308,6 +308,33 @@
                     this.stopAutoplay();
                 }
             }));
+
+            Alpine.data('testimonialSlider', (count) => ({
+                active: 0,
+                total: count,
+                darkMode: true,
+                interval: null,
+
+                init() {
+                    if (this.total > 1) {
+                        this.startAutoplay();
+                    }
+                },
+
+                startAutoplay() {
+                    this.interval = setInterval(() => {
+                        this.active = (this.active + 1) % this.total;
+                    }, 4000);
+                },
+
+                stopAutoplay() {
+                    clearInterval(this.interval);
+                },
+
+                destroy() {
+                    this.stopAutoplay();
+                }
+            }));
         });
     </script>
 

@@ -7,7 +7,6 @@ use Modules\About\Models\AboutGallery;
 use Modules\About\Models\AboutUs;
 use Modules\Banner\Models\Banner;
 use Modules\Event\Models\Event;
-use Modules\Menu\Models\Category;
 use Modules\Menu\Models\Menu;
 use Modules\Testimonial\Models\Testimonial;
 use Modules\Faq\Models\Faq;
@@ -20,7 +19,6 @@ class ClientController extends Controller
      */
     public function home()
     {
-        $categories = Category::with('menus')->get();
         $featuredMenus = Menu::where('is_available', true)
             ->with('category')
             ->inRandomOrder()
@@ -33,21 +31,33 @@ class ClientController extends Controller
             ->limit(3)
             ->get();
 
-        $events = Event::active()->latest()->limit(4)->get();
+        $events = Event::active()->latest()->get();
 
         $banners = Banner::active()->orderBy('order')->get();
 
         $about = AboutUs::getContent();
         $aboutInterior = AboutGallery::category('interior')->orderBy('order')->get();
-        $allAboutGalleries = AboutGallery::orderBy('order')->get();
+        $allAboutGalleries = AboutGallery::orderBy('order')->take(9)->get();
+        $totalGalleryCount = AboutGallery::count();
 
         $testimonials = Testimonial::active()->ordered()->get();
+        $testimonialPages = $testimonials->chunk(3);
 
         $faqs = Faq::active()->ordered()->get();
 
         $setting = RestaurantSetting::getContent();
 
-        return view('client::home', compact('categories', 'featuredMenus', 'heroMenus', 'events', 'banners', 'about', 'aboutInterior', 'allAboutGalleries', 'testimonials', 'faqs', 'setting'));
+        return view('client::home', compact('featuredMenus', 'heroMenus', 'events', 'banners', 'about', 'aboutInterior', 'allAboutGalleries', 'totalGalleryCount', 'testimonials', 'testimonialPages', 'faqs', 'setting'));
+    }
+
+    /**
+     * Full gallery page — all photos, no limit
+     */
+    public function gallery()
+    {
+        $allAboutGalleries = AboutGallery::orderBy('order')->get();
+
+        return view('client::gallery', compact('allAboutGalleries'));
     }
 
     /**

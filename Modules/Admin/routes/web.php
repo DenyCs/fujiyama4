@@ -12,6 +12,7 @@ use Modules\Admin\Http\Controllers\AboutController;
 use Modules\Admin\Http\Controllers\TestimonialController;
 use Modules\Admin\Http\Controllers\SettingsController;
 use Modules\Admin\Http\Controllers\FaqController;
+use Modules\Admin\Http\Controllers\GalleryController;
 use Modules\Admin\Http\Middleware\AdminMiddleware;
 
 Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admin.')->group(function () {
@@ -39,11 +40,12 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admi
     Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
     Route::patch('/reservations/{reservation}/status', [ReservationController::class, 'updateStatus'])->name('reservations.updateStatus');
 
-    // Tentang Kami (singleton — langsung edit)
+    // Tentang Kami (singleton — langsung edit, hanya teks)
     Route::get('/about', [AboutController::class, 'edit'])->name('about.edit');
     Route::put('/about', [AboutController::class, 'update'])->name('about.update');
-    Route::post('/about/gallery', [AboutController::class, 'storeGallery'])->name('about.gallery.store');
-    Route::delete('/about/gallery/{gallery}', [AboutController::class, 'destroyGallery'])->name('about.gallery.destroy');
+
+    // Galeri Foto CRUD (kelola foto gallery di menu terpisah)
+    Route::resource('gallery', GalleryController::class)->except(['show']);
 
     // Testimonial CRUD
     Route::resource('testimonials', TestimonialController::class)->except(['show']);
