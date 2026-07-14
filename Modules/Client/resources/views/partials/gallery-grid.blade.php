@@ -1,8 +1,15 @@
 {{-- ======================================== --}}
 {{-- Gallery Grid + Lightbox — Reusable Partial --}}
 {{-- Expects: $galleries (AboutGallery collection) --}}
+{{-- Optional: $limit (int|null, default: 9 for desktop, 2 for mobile on landing page) --}}
+{{-- Optional: $showFilter (bool, default: true) --}}
+{{-- Optional: $context (string, 'landing'|'fullpage', default: 'landing') --}}
 {{-- ======================================== --}}
 @php
+    $limit = $limit ?? null;
+    $showFilter = $showFilter ?? false;
+    $context = $context ?? 'landing';
+
     $tabCategories = [
         'semua' => 'Semua',
         'interior' => 'Interior',
@@ -23,7 +30,7 @@
     {{-- ======================================== --}}
     {{-- PILL TAB FILTER --}}
     {{-- ======================================== --}}
-    <div class="flex flex-wrap justify-center gap-2 mb-10">
+    <div class="{{ $showFilter ? 'flex' : 'hidden md:flex' }} flex-wrap justify-center gap-2 mb-10">
         @foreach($tabCategories as $catKey => $catLabel)
             @php $catCount = ($catKey === 'semua') ? $galleries->count() : $galleries->where('category', $catKey)->count(); @endphp
             <button @click="activeTab = '{{ $catKey }}'"
@@ -101,10 +108,15 @@
                 @endforeach
             </div>
 
-            {{-- MOBILE GRID: 2-col with varied heights --}}
+            {{-- MOBILE GRID: limited photos (landing: 2, fullpage: all) --}}
             <div class="md:hidden grid grid-cols-2 gap-3"
                 :class="{ 'in-view': inView }">
-                @foreach($catGalleries as $idx => $gallery)
+                @php
+                    $mobileGalleries = ($context === 'landing' && $catGalleries->count() > 2)
+                        ? $catGalleries->take(2)
+                        : $catGalleries;
+                @endphp
+                @foreach($mobileGalleries as $idx => $gallery)
                     @php
                         $isTall = ($idx === 0 || $idx === 3 || $idx % 5 === 0);
                         $flatIdxMobile = $galleries->search(fn($g) => $g->id === $gallery->id);

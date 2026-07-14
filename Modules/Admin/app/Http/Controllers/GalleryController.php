@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use Modules\About\Models\AboutGallery;
+use Modules\About\Models\GalleryCategory;
 
 class GalleryController extends Controller
 {
@@ -14,16 +15,18 @@ class GalleryController extends Controller
      */
     public function index(Request $request)
     {
-        $category = $request->get('category');
+        $categoryId = $request->get('category');
 
-        $galleries = AboutGallery::query()
-            ->when($category, fn ($q) => $q->where('category', $category))
+        $galleries = AboutGallery::with('galleryCategory')
+            ->when($categoryId, fn ($q) => $q->category($categoryId))
             ->orderBy('order')
             ->orderBy('id')
             ->paginate(12)
             ->withQueryString();
 
-        return view('admin::gallery.index', compact('galleries', 'category'));
+        $categories = GalleryCategory::orderBy('name')->get();
+
+        return view('admin::gallery.index', compact('galleries', 'categoryId', 'categories'));
     }
 
     /**
@@ -31,7 +34,9 @@ class GalleryController extends Controller
      */
     public function create()
     {
-        return view('admin::gallery.create');
+        $categories = GalleryCategory::orderBy('name')->get();
+
+        return view('admin::gallery.create', compact('categories'));
     }
 
     /**
@@ -40,15 +45,14 @@ class GalleryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'image'    => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'category' => 'nullable|in:interior,proses_masak,suasana,lainnya',
-            'caption'  => 'nullable|string|max:255',
-            'order'    => 'nullable|integer|min:0',
+            'image'                => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'gallery_category_id'  => 'nullable|exists:gallery_categories,id',
+            'caption'              => 'nullable|string|max:255',
+            'order'                => 'nullable|integer|min:0',
         ]);
 
         $path = $request->file('image')->store('about', 'public');
         $validated['image'] = basename($path);
-        $validated['category'] = $validated['category'] ?? 'lainnya';
         $validated['order'] = $validated['order'] ?? 0;
 
         AboutGallery::create($validated);
@@ -62,7 +66,9 @@ class GalleryController extends Controller
      */
     public function edit(AboutGallery $gallery)
     {
-        return view('admin::gallery.edit', compact('gallery'));
+        $categories = GalleryCategory::orderBy('name')->get();
+
+        return view('admin::gallery.edit', compact('gallery', 'categories'));
     }
 
     /**
@@ -71,10 +77,10 @@ class GalleryController extends Controller
     public function update(Request $request, AboutGallery $gallery)
     {
         $validated = $request->validate([
-            'image'    => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'category' => 'nullable|in:interior,proses_masak,suasana,lainnya',
-            'caption'  => 'nullable|string|max:255',
-            'order'    => 'nullable|integer|min:0',
+            'image'                => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'gallery_category_id'  => 'nullable|exists:gallery_categories,id',
+            'caption'              => 'nullable|string|max:255',
+            'order'                => 'nullable|integer|min:0',
         ]);
 
         if ($request->hasFile('image')) {
@@ -88,7 +94,6 @@ class GalleryController extends Controller
             unset($validated['image']);
         }
 
-        $validated['category'] = $validated['category'] ?? 'lainnya';
         $validated['order'] = $validated['order'] ?? 0;
 
         $gallery->update($validated);

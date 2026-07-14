@@ -27,5 +27,17 @@ class SettingSeeder extends Seeder
                 ]),
             ]);
         }
+
+        // Ensure footer fields have defaults if null
+        if (!$setting->footer_description) {
+            $setting->update([
+                'footer_description' => 'Authentic Japanese ramen experience. Handcrafted noodles, rich broth, and premium toppings — crafted with passion since 2015.',
+            ]);
+        }
+        if (!$setting->copyright_text) {
+            $setting->update([
+                'copyright_text' => 'Fujiyama Ramen. All rights reserved.',
+            ]);
+        }
     }
 }

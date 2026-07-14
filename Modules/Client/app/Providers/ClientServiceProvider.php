@@ -5,6 +5,8 @@ namespace Modules\Client\Providers;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Modules\Cart\Models\Cart;
+use Modules\Setting\Models\RestaurantSetting;
+use Modules\Setting\Models\SocialLink;
 
 class ClientServiceProvider extends ServiceProvider
 {
@@ -24,8 +26,7 @@ class ClientServiceProvider extends ServiceProvider
         // Register the Client module's view namespace
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'client');
 
-        // Share $cartCount to ALL views extended from the Client module
-        // so the navbar badge always has the correct count on full page loads.
+        // Share $cartCount, $socialLinks, and $restaurantSetting to ALL client views
         View::composer('client::*', function ($view) {
             try {
                 $cartCount = Cart::getCurrent()->items()->count();
@@ -33,6 +34,20 @@ class ClientServiceProvider extends ServiceProvider
                 $cartCount = 0;
             }
             $view->with('cartCount', $cartCount);
+
+            try {
+                $socialLinks = SocialLink::active()->ordered()->get();
+            } catch (\Throwable $e) {
+                $socialLinks = collect();
+            }
+            $view->with('socialLinks', $socialLinks);
+
+            try {
+                $restaurantSetting = RestaurantSetting::getContent();
+            } catch (\Throwable $e) {
+                $restaurantSetting = new RestaurantSetting();
+            }
+            $view->with('restaurantSetting', $restaurantSetting);
         });
     }
 }

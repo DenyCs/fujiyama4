@@ -22,7 +22,7 @@
                     class="absolute inset-0"
                     style="display: none;"
                 >
-                    <img src="<?php echo e($banner->image_url); ?>" alt="<?php echo e($banner->title); ?>" class="block w-full h-full object-cover object-right">
+                    <img src="<?php echo e($banner->image_url); ?>" alt="<?php echo e($banner->title); ?>" class="block w-full h-full object-cover object-right" loading="lazy" decoding="async">
                     
                     <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white dark:from-neutral-950 via-white/80 dark:via-neutral-950/80 to-transparent"></div>
                 </div>
@@ -278,16 +278,23 @@
 
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Section Header -->
+            <?php $sec = $sections['menu_unggulan'] ?? null; ?>
             <div class="text-center mb-16">
+                <?php if($sec && $sec->badge_text): ?>
                 <span class="inline-block text-xs font-bold text-orange-500 uppercase tracking-[0.2em] mb-4">
-                    Chef's Selection
+                    <?php echo e($sec->badge_text); ?>
+
                 </span>
+                <?php endif; ?>
                 <h2 class="text-3xl md:text-5xl font-black font-['Noto_Sans_JP'] text-neutral-900 dark:text-white mb-4">
-                    Menu Unggulan
+                    <?php if($sec): ?> <?php echo preg_replace('/\*(.*?)\*/', '<span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500">$1</span>', e($sec->title)); ?> <?php else: ?> Menu Unggulan <?php endif; ?>
                 </h2>
+                <?php if($sec && $sec->subtitle): ?>
                 <p class="text-neutral-600 dark:text-neutral-400 max-w-xl mx-auto">
-                    Pilihan terbaik dari dapur kami — setiap mangkuk diracik dengan bahan premium dan cinta.
+                    <?php echo e($sec->subtitle); ?>
+
                 </p>
+                <?php endif; ?>
             </div>
 
             <!-- Floating Card Grid -->
@@ -429,8 +436,8 @@
                 
                 <div class="order-1 lg:order-2 relative flex justify-center lg:justify-end">
                     <?php
-                        $heroPhoto = $aboutInterior->first() ?? $aboutGalleryAll->first();
-                        $secondPhoto = $aboutInterior->skip(1)->first() ?? $aboutGalleryAll->skip(1)->first();
+                        $heroPhoto = $about->primaryPhoto ?? $aboutInterior->first() ?? $allAboutGalleries->first();
+                        $secondPhoto = $about->secondaryPhoto ?? $aboutInterior->skip(1)->first() ?? $allAboutGalleries->skip(1)->first();
                     ?>
                     <?php if($heroPhoto): ?>
                     <div class="relative w-full max-w-md lg:max-w-lg">
@@ -478,16 +485,23 @@
         
         
         
+        <?php $sec = $sections['galeri_foto'] ?? null; ?>
         <div class="text-center mb-10 md:mb-14">
+            <?php if($sec && $sec->badge_text): ?>
             <span class="inline-block px-4 py-1.5 rounded-full text-xs font-semibold text-orange-600 dark:text-orange-400 bg-orange-500/10 dark:bg-orange-500/10 border border-orange-500/20 dark:border-orange-500/20 mb-4">
-                📸 Momen di Fujiyama
+                <?php echo e($sec->badge_text); ?>
+
             </span>
+            <?php endif; ?>
             <h2 class="text-3xl md:text-5xl lg:text-6xl font-black font-['Noto_Sans_JP'] text-neutral-900 dark:text-white leading-tight tracking-tight mb-4">
-                Galeri <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500">Foto</span>
+                <?php if($sec): ?> <?php echo preg_replace('/\*(.*?)\*/', '<span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500">$1</span>', e($sec->title)); ?> <?php else: ?> Galeri Foto <?php endif; ?>
             </h2>
+            <?php if($sec && $sec->subtitle): ?>
             <p class="text-neutral-600 dark:text-neutral-400 max-w-xl mx-auto text-sm md:text-base">
-                Intip keseruan di balik layar — dari proses memasak hingga suasana hangat di Fujiyama Ramen.
+                <?php echo e($sec->subtitle); ?>
+
             </p>
+            <?php endif; ?>
         </div>
 
         
@@ -498,7 +512,6 @@
         
         
         
-        <?php if($totalGalleryCount > 9): ?>
         <div class="mt-12 text-center">
             <a href="<?php echo e(route('client.gallery')); ?>"
                 class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold text-sm md:text-base shadow-lg shadow-orange-500/25 hover:shadow-xl hover:shadow-orange-500/30 hover:scale-[1.03] transition-all duration-300 hover:-translate-y-0.5">
@@ -511,7 +524,6 @@
                 </span>
             </a>
         </div>
-        <?php endif; ?>
     </div>
 </section>
 
@@ -719,11 +731,20 @@
         <div class="hidden md:block py-16 md:py-24">
             <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 
+                <?php $sec = $sections['lokasi_jam_buka'] ?? null; ?>
                 <div class="text-center mb-10">
-                    <span class="inline-block text-orange-500 font-semibold text-sm tracking-widest uppercase mb-2">Kunjungi Kami</span>
+                    <?php if($sec && $sec->badge_text): ?>
+                    <span class="inline-block text-orange-500 font-semibold text-sm tracking-widest uppercase mb-2"><?php echo e($sec->badge_text); ?></span>
+                    <?php endif; ?>
                     <h2 class="text-3xl md:text-5xl font-extrabold text-neutral-900 dark:text-white">
-                        Lokasi & Jam Buka
+                        <?php if($sec): ?> <?php echo preg_replace('/\*(.*?)\*/', '<span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500">$1</span>', e($sec->title)); ?> <?php else: ?> Lokasi & Jam Buka <?php endif; ?>
                     </h2>
+                    <?php if($sec && $sec->subtitle): ?>
+                    <p class="text-neutral-600 dark:text-neutral-400 mt-3 max-w-xl mx-auto">
+                        <?php echo e($sec->subtitle); ?>
+
+                    </p>
+                    <?php endif; ?>
                     <div class="mt-3 mx-auto w-20 h-1 bg-gradient-to-r from-orange-500 to-orange-400 rounded-full"></div>
                 </div>
 
@@ -910,7 +931,7 @@
     
     <section
         x-data="{ active: 0, desktopPage: 0, totalItems: <?php echo e($testimonials->count()); ?>, totalPages: <?php echo e($testimonialPages->count()); ?> }"
-        class="relative py-16 md:py-28 overflow-hidden bg-neutral-900 dark:bg-neutral-950"
+        class="relative py-16 md:py-28 overflow-hidden bg-neutral-900 dark:bg-neutral-950 hidden md:block"
     >
         
         
@@ -958,20 +979,24 @@
             
             
             
+            <?php $sec = $sections['testimoni'] ?? null; ?>
             <div class="text-center mb-14 md:mb-20">
                 <h2 class="text-3xl md:text-5xl lg:text-6xl font-black font-['Noto_Sans_JP'] text-white leading-tight tracking-tight">
-                    Apa Kata <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500">Pelanggan</span> Kami
+                    <?php if($sec): ?> <?php echo preg_replace('/\*(.*?)\*/', '<span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500">$1</span>', e($sec->title)); ?> <?php else: ?> Apa Kata <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500">Pelanggan</span> Kami <?php endif; ?>
                 </h2>
+                <?php if($sec && $sec->subtitle): ?>
                 <p class="mt-4 text-neutral-400 max-w-xl mx-auto text-sm md:text-base">
-                    Setiap mangkuk punya cerita, setiap tegukan sarat kenangan.
+                    <?php echo e($sec->subtitle); ?>
+
                 </p>
+                <?php endif; ?>
             </div>
 
             <?php if($testimonials->count()): ?>
                 
                 
                 
-                <div class="lg:hidden relative min-h-[380px]">
+                <div class="lg:hidden relative min-h-[260px]">
                     <?php $__currentLoopData = $testimonials; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $i => $testimonial): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div
                         class="absolute inset-0 transition-opacity duration-300"
@@ -1075,7 +1100,7 @@
                 
                 
                 <?php if($testimonials->count() > 1): ?>
-                <div class="flex justify-end items-center gap-2 mt-10 mb-4 lg:hidden">
+                <div class="flex justify-end items-center gap-2 mt-6 mb-2 lg:hidden">
                     <?php $__currentLoopData = $testimonials; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $idx => $t): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <button
                         @click="active = <?php echo e($idx); ?>"
@@ -1122,7 +1147,7 @@
     
     
     <?php if($events->count()): ?>
-    <section class="py-16 md:py-20 bg-neutral-100 dark:bg-neutral-900/50"
+    <section class="py-16 md:py-20 bg-neutral-100 dark:bg-neutral-900/50 hidden md:block"
         x-data="{
             activeEventIndex: 0,
             transition: false,
@@ -1137,14 +1162,20 @@
         }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
+            <?php $sec = $sections['event_promo'] ?? null; ?>
             <div class="text-center mb-10">
-                <span class="inline-block text-xs font-bold text-orange-500 uppercase tracking-[0.2em] mb-3">Event & Promo</span>
+                <?php if($sec && $sec->badge_text): ?>
+                <span class="inline-block text-xs font-bold text-orange-500 uppercase tracking-[0.2em] mb-3"><?php echo e($sec->badge_text); ?></span>
+                <?php endif; ?>
                 <h2 class="text-3xl md:text-4xl font-black text-neutral-900 dark:text-white">
-                    Jangan Lewatkan Keseruannya!
+                    <?php if($sec): ?> <?php echo preg_replace('/\*(.*?)\*/', '<span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500">$1</span>', e($sec->title)); ?> <?php else: ?> Jangan Lewatkan Keseruannya! <?php endif; ?>
                 </h2>
+                <?php if($sec && $sec->subtitle): ?>
                 <p class="text-neutral-600 dark:text-neutral-400 mt-3 max-w-xl mx-auto">
-                    Ikuti event spesial dan promo menarik dari Fujiyama Ramen.
+                    <?php echo e($sec->subtitle); ?>
+
                 </p>
+                <?php endif; ?>
             </div>
 
             
@@ -1283,17 +1314,24 @@
             
             <div class="rounded-3xl bg-white/70 dark:bg-neutral-900/60 backdrop-blur-2xl border border-black/5 dark:border-white/10 shadow-xl shadow-black/5 dark:shadow-black/20 p-6 md:p-10">
                 
+                <?php $sec = $sections['faq'] ?? null; ?>
                 <div class="text-center mb-10 md:mb-12">
+                    <?php if($sec && $sec->badge_text): ?>
                     <span class="inline-block text-orange-500 font-semibold text-sm tracking-widest uppercase mb-2">
-                        Pertanyaan yang Sering Diajukan
+                        <?php echo e($sec->badge_text); ?>
+
                     </span>
+                    <?php endif; ?>
                     <h2 class="text-3xl md:text-5xl font-black font-['Noto_Sans_JP'] text-neutral-900 dark:text-white">
-                        FAQ
+                        <?php if($sec): ?> <?php echo preg_replace('/\*(.*?)\*/', '<span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500">$1</span>', e($sec->title)); ?> <?php else: ?> FAQ <?php endif; ?>
                     </h2>
                     <div class="mt-3 mx-auto w-20 h-1 bg-gradient-to-r from-orange-500 to-orange-400 rounded-full"></div>
+                    <?php if($sec && $sec->subtitle): ?>
                     <p class="mt-4 text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-                        Semua yang perlu kamu tahu sebelum berkunjung ke Fujiyama Ramen.
+                        <?php echo e($sec->subtitle); ?>
+
                     </p>
+                    <?php endif; ?>
                 </div>
 
                 <?php if($faqs->count()): ?>

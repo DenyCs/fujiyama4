@@ -4,21 +4,12 @@
 
 @section('content')
     {{-- ========== HEADER PAGE ========== --}}
-    <section class="relative pt-24 pb-8 md:pt-32 md:pb-12 overflow-hidden bg-neutral-100 dark:bg-neutral-900/50">
+    <section class="relative pt-12 md:pt-16 pb-8 md:pb-12 overflow-hidden bg-neutral-100 dark:bg-neutral-900/50">
         {{-- Decorative blobs --}}
         <div class="absolute -top-32 right-[10%] w-[28rem] h-[28rem] bg-orange-500/12 dark:bg-orange-500/6 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
         <div class="absolute -bottom-20 left-[5%] w-[24rem] h-[24rem] bg-amber-400/10 dark:bg-amber-500/5 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
 
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {{-- Back button --}}
-            <a href="{{ route('client.home') }}#galeri-foto"
-                class="inline-flex items-center gap-2 text-neutral-500 dark:text-neutral-400 hover:text-orange-500 dark:hover:text-orange-400 transition-colors mb-6 text-sm font-medium">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
-                Kembali ke Beranda
-            </a>
-
             {{-- Page header --}}
             <div class="text-center mb-8">
                 <span class="inline-block px-4 py-1.5 rounded-full text-xs font-semibold text-orange-600 dark:text-orange-400 bg-orange-500/10 dark:bg-orange-500/10 border border-orange-500/20 dark:border-orange-500/20 mb-4">
@@ -37,7 +28,7 @@
     {{-- ========== GALLERY GRID FULL (reuse partial) ========== --}}
     <section class="relative py-8 md:py-16 overflow-hidden bg-neutral-100 dark:bg-neutral-900/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            @include('client::partials.gallery-grid', ['galleries' => $allAboutGalleries])
+            @include('client::partials.gallery-grid', ['galleries' => $allAboutGalleries, 'context' => 'fullpage', 'showFilter' => true])
         </div>
     </section>
 @endsection

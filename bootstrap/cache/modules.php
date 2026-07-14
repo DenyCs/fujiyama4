@@ -13,8 +13,9 @@
     9 => 'Modules\\Menu\\Providers\\MenuServiceProvider',
     10 => 'Modules\\Order\\Providers\\OrderServiceProvider',
     11 => 'Modules\\Reservation\\Providers\\ReservationServiceProvider',
-    12 => 'Modules\\Setting\\Providers\\SettingServiceProvider',
-    13 => 'Modules\\Testimonial\\Providers\\TestimonialServiceProvider',
+    12 => 'Modules\\SectionContent\\Providers\\SectionContentServiceProvider',
+    13 => 'Modules\\Setting\\Providers\\SettingServiceProvider',
+    14 => 'Modules\\Testimonial\\Providers\\TestimonialServiceProvider',
   ),
   'eager' => 
   array (
@@ -30,8 +31,9 @@
     9 => 'Modules\\Menu\\Providers\\MenuServiceProvider',
     10 => 'Modules\\Order\\Providers\\OrderServiceProvider',
     11 => 'Modules\\Reservation\\Providers\\ReservationServiceProvider',
-    12 => 'Modules\\Setting\\Providers\\SettingServiceProvider',
-    13 => 'Modules\\Testimonial\\Providers\\TestimonialServiceProvider',
+    12 => 'Modules\\SectionContent\\Providers\\SectionContentServiceProvider',
+    13 => 'Modules\\Setting\\Providers\\SettingServiceProvider',
+    14 => 'Modules\\Testimonial\\Providers\\TestimonialServiceProvider',
   ),
   'deferred' => 
   array (

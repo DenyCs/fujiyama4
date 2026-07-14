@@ -9,19 +9,7 @@
 @endsection
 
 @php
-    $categoryLabels = [
-        'interior'    => 'Interior',
-        'proses_masak'=> 'Proses Masak',
-        'suasana'     => 'Suasana',
-        'lainnya'     => 'Lainnya',
-    ];
-    $categoryColors = [
-        'interior'    => 'bg-primary',
-        'proses_masak'=> 'bg-danger',
-        'suasana'     => 'bg-success',
-        'lainnya'     => 'bg-secondary',
-    ];
-    $selectedCategory = request('category', '');
+    $selectedCategoryId = request('category', '');
 @endphp
 
 @section('content')
@@ -36,13 +24,16 @@
             <form action="{{ route('admin.gallery.index') }}" method="GET" class="d-flex gap-2">
                 <select name="category" class="form-select form-select-sm" onchange="this.form.submit()">
                     <option value="">Semua Kategori</option>
-                    @foreach($categoryLabels as $key => $label)
-                        <option value="{{ $key }}" {{ $selectedCategory == $key ? 'selected' : '' }}>{{ $label }}</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}" {{ $selectedCategoryId == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                     @endforeach
                 </select>
             </form>
             <a href="{{ route('admin.gallery.create') }}" class="btn btn-primary btn-sm">
                 <i class="fas fa-plus me-1"></i> Tambah Foto
+            </a>
+            <a href="{{ route('admin.gallery-categories.index') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-tags me-1"></i> Kelola Kategori
             </a>
         </div>
     </div>
@@ -57,10 +48,14 @@
                         <img src="{{ $gallery->image_url }}"
                             alt="{{ $gallery->caption ?? 'Foto Galeri' }}"
                             class="card-img-top"
-                            style="height: 140px; object-fit: cover;">
-                        <span class="badge {{ $categoryColors[$gallery->category] ?? 'bg-secondary' }} position-absolute top-0 end-0 m-2">
-                            {{ $categoryLabels[$gallery->category] ?? 'Lainnya' }}
+                            style="height: 140px; object-fit: cover;"
+                            loading="lazy"
+                            onerror="this.onerror=null;this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22><rect fill=%22%23e5e7eb%22 width=%22400%22 height=%22300%22/><text x=%22200%22 y=%22155%22 text-anchor=%22middle%22 fill=%22%239ca3af%22 font-size=%2214%22>No Image</text></svg>';" />
+                        @if($gallery->galleryCategory)
+                        <span class="badge bg-primary position-absolute top-0 end-0 m-2">
+                            {{ $gallery->galleryCategory->name }}
                         </span>
+                        @endif
                     </div>
                     <div class="card-body p-2 text-center">
                         <small class="text-muted d-block mb-1">{{ $gallery->caption ?: '-' }}</small>
@@ -96,7 +91,7 @@
 
     @if($galleries->hasPages())
     <div class="card-footer">
-        {{ $galleries->links() }}
+        {{ $galleries->links('pagination::bootstrap-5') }}
     </div>
     @endif
 </div>

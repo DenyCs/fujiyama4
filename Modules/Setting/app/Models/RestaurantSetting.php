@@ -3,9 +3,13 @@
 namespace Modules\Setting\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class RestaurantSetting extends Model
 {
+    use LogsActivity;
+
     protected $table = 'restaurant_settings';
 
     protected $fillable = [
@@ -15,6 +19,11 @@ class RestaurantSetting extends Model
         'phone',
         'google_maps_embed_url',
         'opening_hours',
+        'footer_description',
+        'copyright_text',
+        'logo_dark',
+        'logo_light',
+        'favicon_image',
     ];
 
     protected $casts = [
@@ -22,6 +31,14 @@ class RestaurantSetting extends Model
         'latitude'      => 'decimal:7',
         'longitude'     => 'decimal:7',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['address', 'phone', 'opening_hours', 'footer_description', 'copyright_text', 'logo_dark', 'logo_light', 'favicon_image'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
 
     /**
      * Get or create the singleton restaurant settings record.
@@ -85,5 +102,28 @@ class RestaurantSetting extends Model
         $today   = $dayKeys[(int) now()->dayOfWeek];
 
         return $hours[$today] ?? null;
+    }
+
+    /**
+     * Get a compact opening hours summary for footer display.
+     * Example: "Senin—Minggu: 11:00—22:00"
+     */
+    public function getOpeningHoursSummary(): string
+    {
+        $hours = $this->opening_hours;
+
+        if (empty($hours) || !is_array($hours)) {
+            return 'Jam operasional belum diatur';
+        }
+
+        // Try to find a common pattern
+        $unique = array_unique(array_values($hours));
+
+        if (count($unique) === 1) {
+            return 'Setiap Hari: ' . reset($unique);
+        }
+
+        // Show today's schedule
+        return $this->todaySchedule() ?? 'Jam operasional belum diatur';
     }
 }

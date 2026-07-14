@@ -5,6 +5,7 @@ namespace Modules\About\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Modules\About\Models\AboutUs;
 use Modules\About\Models\AboutGallery;
+use Modules\About\Models\GalleryCategory;
 
 class AboutSeeder extends Seeder
 {
@@ -71,15 +72,28 @@ class AboutSeeder extends Seeder
             ],
         ];
 
+        // Map old enum values to GalleryCategory names
+        $categoryMap = [
+            'interior'     => 'Interior',
+            'proses_masak' => 'Proses Masak',
+            'suasana'      => 'Suasana',
+            'lainnya'      => 'Lainnya',
+        ];
+
         foreach ($galleryItems as $item) {
-            AboutGallery::firstOrCreate(
-                ['image' => $item['image']],
-                [
-                    'caption'  => $item['caption'],
-                    'category' => $item['category'],
-                    'order'    => $item['order'],
-                ]
-            );
+            $categoryName = $categoryMap[$item['category']] ?? 'Lainnya';
+            $galleryCategory = GalleryCategory::where('name', $categoryName)->first();
+
+            if ($galleryCategory) {
+                AboutGallery::firstOrCreate(
+                    ['image' => $item['image']],
+                    [
+                        'caption'            => $item['caption'],
+                        'gallery_category_id' => $galleryCategory->id,
+                        'order'              => $item['order'],
+                    ]
+                );
+            }
         }
     }
 }

@@ -46,15 +46,15 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="category" class="form-label">Kategori</label>
-                        <select name="category" id="category"
-                            class="form-select @error('category') is-invalid @enderror">
-                            <option value="interior" {{ old('category', $gallery->category) == 'interior' ? 'selected' : '' }}>Interior</option>
-                            <option value="proses_masak" {{ old('category', $gallery->category) == 'proses_masak' ? 'selected' : '' }}>Proses Masak</option>
-                            <option value="suasana" {{ old('category', $gallery->category) == 'suasana' ? 'selected' : '' }}>Suasana</option>
-                            <option value="lainnya" {{ old('category', $gallery->category) == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
+                        <label for="gallery_category_id" class="form-label">Kategori</label>
+                        <select name="gallery_category_id" id="gallery_category_id"
+                            class="form-select @error('gallery_category_id') is-invalid @enderror">
+                            <option value="">-- Pilih Kategori --</option>
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat->id }}" {{ old('gallery_category_id', $gallery->gallery_category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                            @endforeach
                         </select>
-                        @error('category')
+                        @error('gallery_category_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>

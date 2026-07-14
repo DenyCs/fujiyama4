@@ -11,9 +11,9 @@ class MenuDatabaseSeeder extends Seeder
     public function run(): void
     {
         // Categories
-        $ramen = Category::create(['name' => 'Ramen', 'slug' => 'ramen']);
-        $drink = Category::create(['name' => 'Minuman', 'slug' => 'minuman']);
-        $topping = Category::create(['name' => 'Topping Tambahan', 'slug' => 'topping-tambahan']);
+        $ramen = Category::create(['name' => 'Ramen', 'slug' => 'ramen', 'order' => 1]);
+        $topping = Category::create(['name' => 'Topping Tambahan', 'slug' => 'topping-tambahan', 'order' => 2]);
+        $drink = Category::create(['name' => 'Minuman', 'slug' => 'minuman', 'order' => 3]);
 
         // Ramen menus
         Menu::create([

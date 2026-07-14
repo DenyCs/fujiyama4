@@ -4,12 +4,16 @@ namespace Modules\Event\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * @method static \Illuminate\Database\Eloquent\Builder active()
  */
 class Event extends Model
 {
+    use LogsActivity;
+
     protected $fillable = [
         'title',
         'description',
@@ -20,6 +24,14 @@ class Event extends Model
         'discount_promo',
         'status',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['title', 'status', 'start_date', 'end_date'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
 
     protected $casts = [
         'start_date' => 'date',

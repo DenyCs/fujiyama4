@@ -2,7 +2,14 @@
 
 
 
+
+
+
 <?php
+    $limit = $limit ?? null;
+    $showFilter = $showFilter ?? false;
+    $context = $context ?? 'landing';
+
     $tabCategories = [
         'semua' => 'Semua',
         'interior' => 'Interior',
@@ -23,7 +30,7 @@
     
     
     
-    <div class="flex flex-wrap justify-center gap-2 mb-10">
+    <div class="<?php echo e($showFilter ? 'flex' : 'hidden md:flex'); ?> flex-wrap justify-center gap-2 mb-10">
         <?php $__currentLoopData = $tabCategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $catKey => $catLabel): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <?php $catCount = ($catKey === 'semua') ? $galleries->count() : $galleries->where('category', $catKey)->count(); ?>
             <button @click="activeTab = '<?php echo e($catKey); ?>'"
@@ -106,7 +113,12 @@
             
             <div class="md:hidden grid grid-cols-2 gap-3"
                 :class="{ 'in-view': inView }">
-                <?php $__currentLoopData = $catGalleries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $idx => $gallery): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php
+                    $mobileGalleries = ($context === 'landing' && $catGalleries->count() > 2)
+                        ? $catGalleries->take(2)
+                        : $catGalleries;
+                ?>
+                <?php $__currentLoopData = $mobileGalleries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $idx => $gallery): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <?php
                         $isTall = ($idx === 0 || $idx === 3 || $idx % 5 === 0);
                         $flatIdxMobile = $galleries->search(fn($g) => $g->id === $gallery->id);

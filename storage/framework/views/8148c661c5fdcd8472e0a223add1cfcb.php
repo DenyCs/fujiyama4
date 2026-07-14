@@ -1,7 +1,7 @@
 
 
 <?php $__env->startSection('title', 'Event & Promo'); ?>
-<?php $__env->startSection('content_header', 'Event & Promo'); ?>
+<?php $__env->startSection('page_title', 'Event & Promo'); ?>
 
 <?php $__env->startSection('content'); ?>
 <div class="card">
@@ -43,7 +43,7 @@
                     <td><?php echo e($event->end_date->format('d M Y')); ?></td>
                     <td><?php echo e($event->discount_promo ?? '-'); ?></td>
                     <td>
-                        <span class="badge badge-<?php echo e($event->status === 'active' ? 'success' : 'secondary'); ?>">
+<span class="badge <?php echo e($event->status === 'active' ? 'text-bg-success' : 'text-bg-secondary'); ?>">
                             <?php echo e($event->status === 'active' ? 'Aktif' : 'Tidak Aktif'); ?>
 
                         </span>

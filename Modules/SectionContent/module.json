@@ -1,0 +1,11 @@
+{
+    "name": "SectionContent",
+    "alias": "sectioncontent",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\SectionContent\\Providers\\SectionContentServiceProvider"
+    ],
+    "files": []
+}

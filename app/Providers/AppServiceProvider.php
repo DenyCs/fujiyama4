@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Use Bootstrap 5 pagination for AdminLTE compatibility
+        \Illuminate\Pagination\AbstractPaginator::defaultView('pagination::bootstrap-5');
+        \Illuminate\Pagination\AbstractPaginator::defaultSimpleView('pagination::simple-bootstrap-5');
     }
 }

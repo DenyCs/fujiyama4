@@ -3,9 +3,13 @@
 namespace Modules\Testimonial\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Testimonial extends Model
 {
+    use LogsActivity;
+
     protected $fillable = [
         'customer_name',
         'customer_photo',
@@ -20,6 +24,14 @@ class Testimonial extends Model
         'rating' => 'integer',
         'order' => 'integer',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['customer_name', 'rating', 'status', 'order_type'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
 
     /**
      * Get the URL for customer photo, or null if not set.

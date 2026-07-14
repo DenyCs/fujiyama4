@@ -9,19 +9,7 @@
 <?php $__env->stopSection(); ?>
 
 <?php
-    $categoryLabels = [
-        'interior'    => 'Interior',
-        'proses_masak'=> 'Proses Masak',
-        'suasana'     => 'Suasana',
-        'lainnya'     => 'Lainnya',
-    ];
-    $categoryColors = [
-        'interior'    => 'bg-primary',
-        'proses_masak'=> 'bg-danger',
-        'suasana'     => 'bg-success',
-        'lainnya'     => 'bg-secondary',
-    ];
-    $selectedCategory = request('category', '');
+    $selectedCategoryId = request('category', '');
 ?>
 
 <?php $__env->startSection('content'); ?>
@@ -36,13 +24,16 @@
             <form action="<?php echo e(route('admin.gallery.index')); ?>" method="GET" class="d-flex gap-2">
                 <select name="category" class="form-select form-select-sm" onchange="this.form.submit()">
                     <option value="">Semua Kategori</option>
-                    <?php $__currentLoopData = $categoryLabels; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $label): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <option value="<?php echo e($key); ?>" <?php echo e($selectedCategory == $key ? 'selected' : ''); ?>><?php echo e($label); ?></option>
+                    <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($cat->id); ?>" <?php echo e($selectedCategoryId == $cat->id ? 'selected' : ''); ?>><?php echo e($cat->name); ?></option>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
             </form>
             <a href="<?php echo e(route('admin.gallery.create')); ?>" class="btn btn-primary btn-sm">
                 <i class="fas fa-plus me-1"></i> Tambah Foto
+            </a>
+            <a href="<?php echo e(route('admin.gallery-categories.index')); ?>" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-tags me-1"></i> Kelola Kategori
             </a>
         </div>
     </div>
@@ -57,11 +48,15 @@
                         <img src="<?php echo e($gallery->image_url); ?>"
                             alt="<?php echo e($gallery->caption ?? 'Foto Galeri'); ?>"
                             class="card-img-top"
-                            style="height: 140px; object-fit: cover;">
-                        <span class="badge <?php echo e($categoryColors[$gallery->category] ?? 'bg-secondary'); ?> position-absolute top-0 end-0 m-2">
-                            <?php echo e($categoryLabels[$gallery->category] ?? 'Lainnya'); ?>
+                            style="height: 140px; object-fit: cover;"
+                            loading="lazy"
+                            onerror="this.onerror=null;this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22><rect fill=%22%23e5e7eb%22 width=%22400%22 height=%22300%22/><text x=%22200%22 y=%22155%22 text-anchor=%22middle%22 fill=%22%239ca3af%22 font-size=%2214%22>No Image</text></svg>';" />
+                        <?php if($gallery->galleryCategory): ?>
+                        <span class="badge bg-primary position-absolute top-0 end-0 m-2">
+                            <?php echo e($gallery->galleryCategory->name); ?>
 
                         </span>
+                        <?php endif; ?>
                     </div>
                     <div class="card-body p-2 text-center">
                         <small class="text-muted d-block mb-1"><?php echo e($gallery->caption ?: '-'); ?></small>
@@ -97,7 +92,7 @@
 
     <?php if($galleries->hasPages()): ?>
     <div class="card-footer">
-        <?php echo e($galleries->links()); ?>
+        <?php echo e($galleries->links('pagination::bootstrap-5')); ?>
 
     </div>
     <?php endif; ?>

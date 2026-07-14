@@ -1,7 +1,7 @@
 @extends('admin::layouts.master')
 
 @section('title', 'Event & Promo')
-@section('content_header', 'Event & Promo')
+@section('page_title', 'Event & Promo')
 
 @section('content')
 <div class="card">
@@ -43,7 +43,7 @@
                     <td>{{ $event->end_date->format('d M Y') }}</td>
                     <td>{{ $event->discount_promo ?? '-' }}</td>
                     <td>
-                        <span class="badge badge-{{ $event->status === 'active' ? 'success' : 'secondary' }}">
+<span class="badge {{ $event->status === 'active' ? 'text-bg-success' : 'text-bg-secondary' }}">
                             {{ $event->status === 'active' ? 'Aktif' : 'Tidak Aktif' }}
                         </span>
                     </td>

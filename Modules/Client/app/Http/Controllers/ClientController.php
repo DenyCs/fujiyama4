@@ -11,6 +11,7 @@ use Modules\Menu\Models\Menu;
 use Modules\Testimonial\Models\Testimonial;
 use Modules\Faq\Models\Faq;
 use Modules\Setting\Models\RestaurantSetting;
+use Modules\SectionContent\Models\SectionContent;
 
 class ClientController extends Controller
 {
@@ -35,7 +36,7 @@ class ClientController extends Controller
 
         $banners = Banner::active()->orderBy('order')->get();
 
-        $about = AboutUs::getContent();
+        $about = AboutUs::getContent()->load('primaryPhoto', 'secondaryPhoto');
         $aboutInterior = AboutGallery::category('interior')->orderBy('order')->get();
         $allAboutGalleries = AboutGallery::orderBy('order')->take(9)->get();
         $totalGalleryCount = AboutGallery::count();
@@ -47,7 +48,9 @@ class ClientController extends Controller
 
         $setting = RestaurantSetting::getContent();
 
-        return view('client::home', compact('featuredMenus', 'heroMenus', 'events', 'banners', 'about', 'aboutInterior', 'allAboutGalleries', 'totalGalleryCount', 'testimonials', 'testimonialPages', 'faqs', 'setting'));
+        $sections = SectionContent::all()->keyBy('section_key');
+
+        return view('client::home', compact('featuredMenus', 'heroMenus', 'events', 'banners', 'about', 'aboutInterior', 'allAboutGalleries', 'totalGalleryCount', 'testimonials', 'testimonialPages', 'faqs', 'setting', 'sections'));
     }
 
     /**
@@ -61,24 +64,66 @@ class ClientController extends Controller
     }
 
     /**
-     * Menu page — all menus grouped by category
+     * Menu page — all menus grouped by category, ordered vertically
      */
     public function menu()
     {
-        $menus = Menu::where('is_available', true)
-            ->with('category')
-            ->orderBy('name')
+        $categories = \Modules\Menu\Models\Category::whereHas('menus', function ($q) {
+                $q->where('is_available', true);
+            })
+            ->with(['menus' => function ($q) {
+                $q->where('is_available', true)->orderBy('name');
+            }])
+            ->orderBy('order')
             ->get();
 
-        return view('client::menu', compact('menus'));
+        return view('client::menu', compact('categories'));
     }
 
     /**
-     * Events page
+     * Events page — with optional filter (all / ongoing / upcoming)
      */
-    public function events()
+    public function events(\Illuminate\Http\Request $request)
     {
-        $events = Event::active()->latest()->paginate(6);
-        return view('client::events', compact('events'));
+        $filter = $request->query('filter', 'all');
+
+        $query = Event::query()->latest();
+
+        if ($filter === 'ongoing') {
+            $query->where('status', 'active')
+                  ->where('start_date', '<=', now()->toDateString())
+                  ->where('end_date', '>=', now()->toDateString());
+        } elseif ($filter === 'upcoming') {
+            $query->where('status', 'active')
+                  ->where('start_date', '>', now()->toDateString());
+        }
+        // 'all' shows everything
+
+        $events = $query->paginate(6)->appends(['filter' => $filter]);
+
+        // Representative ramen photo for CTA banner background
+        $ctaMenuImage = Menu::where('is_available', true)
+            ->whereNotNull('image')
+            ->orderBy('price', 'desc')
+            ->value('image');
+
+        return view('client::events', compact('events', 'filter', 'ctaMenuImage'));
+    }
+
+    /**
+     * Event detail page
+     */
+    public function eventShow(int $id)
+    {
+        $event = Event::findOrFail($id);
+
+        // Other active events for sidebar / related section
+        $otherEvents = Event::active()
+            ->where('id', '!=', $event->id)
+            ->latest()
+            ->limit(3)
+            ->get();
+
+        return view('client::events-show', compact('event', 'otherEvents'));
     }
 }

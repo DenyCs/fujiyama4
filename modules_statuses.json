@@ -11,5 +11,6 @@
     "About": true,
     "Testimonial": true,
     "Setting": true,
-    "Faq": true
+    "Faq": true,
+    "SectionContent": true
 }

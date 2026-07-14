@@ -22,7 +22,7 @@
                     class="absolute inset-0"
                     style="display: none;"
                 >
-                    <img src="{{ $banner->image_url }}" alt="{{ $banner->title }}" class="block w-full h-full object-cover object-right">
+                    <img src="{{ $banner->image_url }}" alt="{{ $banner->title }}" class="block w-full h-full object-cover object-right" loading="lazy" decoding="async">
                     {{-- Gradient overlay: fade bottom of image into page background (dual-mode) --}}
                     <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white dark:from-neutral-950 via-white/80 dark:via-neutral-950/80 to-transparent"></div>
                 </div>
@@ -271,16 +271,21 @@
 
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Section Header -->
+            @php $sec = $sections['menu_unggulan'] ?? null; @endphp
             <div class="text-center mb-16">
+                @if($sec && $sec->badge_text)
                 <span class="inline-block text-xs font-bold text-orange-500 uppercase tracking-[0.2em] mb-4">
-                    Chef's Selection
+                    {{ $sec->badge_text }}
                 </span>
+                @endif
                 <h2 class="text-3xl md:text-5xl font-black font-['Noto_Sans_JP'] text-neutral-900 dark:text-white mb-4">
-                    Menu Unggulan
+                    @if($sec) @accentTitle(e($sec->title)) @else Menu Unggulan @endif
                 </h2>
+                @if($sec && $sec->subtitle)
                 <p class="text-neutral-600 dark:text-neutral-400 max-w-xl mx-auto">
-                    Pilihan terbaik dari dapur kami — setiap mangkuk diracik dengan bahan premium dan cinta.
+                    {{ $sec->subtitle }}
                 </p>
+                @endif
             </div>
 
             <!-- Floating Card Grid -->
@@ -417,8 +422,8 @@
                 {{-- KOLOM KANAN: Foto Hero + Glow + Foto Overlap --}}
                 <div class="order-1 lg:order-2 relative flex justify-center lg:justify-end">
                     @php
-                        $heroPhoto = $aboutInterior->first() ?? $aboutGalleryAll->first();
-                        $secondPhoto = $aboutInterior->skip(1)->first() ?? $aboutGalleryAll->skip(1)->first();
+                        $heroPhoto = $about->primaryPhoto ?? $aboutInterior->first() ?? $allAboutGalleries->first();
+                        $secondPhoto = $about->secondaryPhoto ?? $aboutInterior->skip(1)->first() ?? $allAboutGalleries->skip(1)->first();
                     @endphp
                     @if($heroPhoto)
                     <div class="relative w-full max-w-md lg:max-w-lg">
@@ -466,16 +471,21 @@
         {{-- ======================================== --}}
         {{-- SECTION HEADER — Badge + Gradient Title --}}
         {{-- ======================================== --}}
+        @php $sec = $sections['galeri_foto'] ?? null; @endphp
         <div class="text-center mb-10 md:mb-14">
+            @if($sec && $sec->badge_text)
             <span class="inline-block px-4 py-1.5 rounded-full text-xs font-semibold text-orange-600 dark:text-orange-400 bg-orange-500/10 dark:bg-orange-500/10 border border-orange-500/20 dark:border-orange-500/20 mb-4">
-                📸 Momen di Fujiyama
+                {{ $sec->badge_text }}
             </span>
+            @endif
             <h2 class="text-3xl md:text-5xl lg:text-6xl font-black font-['Noto_Sans_JP'] text-neutral-900 dark:text-white leading-tight tracking-tight mb-4">
-                Galeri <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500">Foto</span>
+                @if($sec) @accentTitle(e($sec->title)) @else Galeri Foto @endif
             </h2>
+            @if($sec && $sec->subtitle)
             <p class="text-neutral-600 dark:text-neutral-400 max-w-xl mx-auto text-sm md:text-base">
-                Intip keseruan di balik layar — dari proses memasak hingga suasana hangat di Fujiyama Ramen.
+                {{ $sec->subtitle }}
             </p>
+            @endif
         </div>
 
         {{-- ======================================== --}}
@@ -486,7 +496,6 @@
         {{-- ======================================== --}}
         {{-- "LIHAT SEMUA FOTO" Button — only if total > 9 --}}
         {{-- ======================================== --}}
-        @if($totalGalleryCount > 9)
         <div class="mt-12 text-center">
             <a href="{{ route('client.gallery') }}"
                 class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold text-sm md:text-base shadow-lg shadow-orange-500/25 hover:shadow-xl hover:shadow-orange-500/30 hover:scale-[1.03] transition-all duration-300 hover:-translate-y-0.5">
@@ -499,7 +508,6 @@
                 </span>
             </a>
         </div>
-        @endif
     </div>
 </section>
 
@@ -701,11 +709,19 @@
         <div class="hidden md:block py-16 md:py-24">
             <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {{-- Section Header --}}
+                @php $sec = $sections['lokasi_jam_buka'] ?? null; @endphp
                 <div class="text-center mb-10">
-                    <span class="inline-block text-orange-500 font-semibold text-sm tracking-widest uppercase mb-2">Kunjungi Kami</span>
+                    @if($sec && $sec->badge_text)
+                    <span class="inline-block text-orange-500 font-semibold text-sm tracking-widest uppercase mb-2">{{ $sec->badge_text }}</span>
+                    @endif
                     <h2 class="text-3xl md:text-5xl font-extrabold text-neutral-900 dark:text-white">
-                        Lokasi & Jam Buka
+                        @if($sec) @accentTitle(e($sec->title)) @else Lokasi & Jam Buka @endif
                     </h2>
+                    @if($sec && $sec->subtitle)
+                    <p class="text-neutral-600 dark:text-neutral-400 mt-3 max-w-xl mx-auto">
+                        {{ $sec->subtitle }}
+                    </p>
+                    @endif
                     <div class="mt-3 mx-auto w-20 h-1 bg-gradient-to-r from-orange-500 to-orange-400 rounded-full"></div>
                 </div>
 
@@ -886,7 +902,7 @@
     {{-- Always dark section: bg-neutral-900 (light mode) / bg-neutral-950 (dark mode) — intentional spotlight effect --}}
     <section
         x-data="{ active: 0, desktopPage: 0, totalItems: {{ $testimonials->count() }}, totalPages: {{ $testimonialPages->count() }} }"
-        class="relative py-16 md:py-28 overflow-hidden bg-neutral-900 dark:bg-neutral-950"
+        class="relative py-16 md:py-28 overflow-hidden bg-neutral-900 dark:bg-neutral-950 hidden md:block"
     >
         {{-- ======================================== --}}
         {{-- DECORATIVE: Blurred Customer Photos --}}
@@ -934,20 +950,23 @@
             {{-- ======================================== --}}
             {{-- HEADLINE — BESAR dengan 1 KATA BERAKSEN --}}
             {{-- ======================================== --}}
+            @php $sec = $sections['testimoni'] ?? null; @endphp
             <div class="text-center mb-14 md:mb-20">
                 <h2 class="text-3xl md:text-5xl lg:text-6xl font-black font-['Noto_Sans_JP'] text-white leading-tight tracking-tight">
-                    Apa Kata <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500">Pelanggan</span> Kami
+                    @if($sec) @accentTitle(e($sec->title)) @else Apa Kata <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500">Pelanggan</span> Kami @endif
                 </h2>
+                @if($sec && $sec->subtitle)
                 <p class="mt-4 text-neutral-400 max-w-xl mx-auto text-sm md:text-base">
-                    Setiap mangkuk punya cerita, setiap tegukan sarat kenangan.
+                    {{ $sec->subtitle }}
                 </p>
+                @endif
             </div>
 
             @if($testimonials->count())
                 {{-- ======================================== --}}
                 {{-- MOBILE: Single Card Carousel — absolute-overlap (fixes layout-flow jump) --}}
                 {{-- ======================================== --}}
-                <div class="lg:hidden relative min-h-[380px]">
+                <div class="lg:hidden relative min-h-[260px]">
                     @foreach($testimonials as $i => $testimonial)
                     <div
                         class="absolute inset-0 transition-opacity duration-300"
@@ -1049,7 +1068,7 @@
                 {{-- MOBILE PAGINATION DOTS — Bottom-Right (below lg) --}}
                 {{-- ======================================== --}}
                 @if($testimonials->count() > 1)
-                <div class="flex justify-end items-center gap-2 mt-10 mb-4 lg:hidden">
+                <div class="flex justify-end items-center gap-2 mt-6 mb-2 lg:hidden">
                     @foreach($testimonials as $idx => $t)
                     <button
                         @click="active = {{ $idx }}"
@@ -1096,7 +1115,7 @@
     {{-- EVENTS & PROMO SECTION — Hero Banner + Floating Tab Navigation --}}
     {{-- ======================================== --}}
     @if($events->count())
-    <section class="py-16 md:py-20 bg-neutral-100 dark:bg-neutral-900/50"
+    <section class="py-16 md:py-20 bg-neutral-100 dark:bg-neutral-900/50 hidden md:block"
         x-data="{
             activeEventIndex: 0,
             transition: false,
@@ -1111,14 +1130,19 @@
         }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {{-- Section Header --}}
+            @php $sec = $sections['event_promo'] ?? null; @endphp
             <div class="text-center mb-10">
-                <span class="inline-block text-xs font-bold text-orange-500 uppercase tracking-[0.2em] mb-3">Event & Promo</span>
+                @if($sec && $sec->badge_text)
+                <span class="inline-block text-xs font-bold text-orange-500 uppercase tracking-[0.2em] mb-3">{{ $sec->badge_text }}</span>
+                @endif
                 <h2 class="text-3xl md:text-4xl font-black text-neutral-900 dark:text-white">
-                    Jangan Lewatkan Keseruannya!
+                    @if($sec) @accentTitle(e($sec->title)) @else Jangan Lewatkan Keseruannya! @endif
                 </h2>
+                @if($sec && $sec->subtitle)
                 <p class="text-neutral-600 dark:text-neutral-400 mt-3 max-w-xl mx-auto">
-                    Ikuti event spesial dan promo menarik dari Fujiyama Ramen.
+                    {{ $sec->subtitle }}
                 </p>
+                @endif
             </div>
 
             {{-- HERO BANNER CONTAINER --}}
@@ -1254,17 +1278,22 @@
             {{-- ===== LIQUID GLASS CONTAINER ===== --}}
             <div class="rounded-3xl bg-white/70 dark:bg-neutral-900/60 backdrop-blur-2xl border border-black/5 dark:border-white/10 shadow-xl shadow-black/5 dark:shadow-black/20 p-6 md:p-10">
                 {{-- Section Header --}}
+                @php $sec = $sections['faq'] ?? null; @endphp
                 <div class="text-center mb-10 md:mb-12">
+                    @if($sec && $sec->badge_text)
                     <span class="inline-block text-orange-500 font-semibold text-sm tracking-widest uppercase mb-2">
-                        Pertanyaan yang Sering Diajukan
+                        {{ $sec->badge_text }}
                     </span>
+                    @endif
                     <h2 class="text-3xl md:text-5xl font-black font-['Noto_Sans_JP'] text-neutral-900 dark:text-white">
-                        FAQ
+                        @if($sec) @accentTitle(e($sec->title)) @else FAQ @endif
                     </h2>
                     <div class="mt-3 mx-auto w-20 h-1 bg-gradient-to-r from-orange-500 to-orange-400 rounded-full"></div>
+                    @if($sec && $sec->subtitle)
                     <p class="mt-4 text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-                        Semua yang perlu kamu tahu sebelum berkunjung ke Fujiyama Ramen.
+                        {{ $sec->subtitle }}
                     </p>
+                    @endif
                 </div>
 
                 @if($faqs->count())
